@@ -16,6 +16,8 @@ Open, reproducible performance benchmarks for the open models served on EcoHash 
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT">
   <img src="https://img.shields.io/badge/open%20speech%20models-29-6D28D9" alt="29 open speech models">
   <img src="https://img.shields.io/badge/measured-2026--06--23-lightgrey" alt="measured 2026-06-23">
+  <a href="https://x.com/ecohashdev"><img src="https://img.shields.io/badge/X-@ecohashdev-000000?logo=x&logoColor=white" alt="X"></a>
+  <a href="https://huggingface.co/ecohash-ai"><img src="https://img.shields.io/badge/Hugging%20Face-ecohash--ai-FFD21E?logo=huggingface&logoColor=black" alt="Hugging Face"></a>
 </p>
 
 <p align="center">
@@ -63,6 +65,8 @@ The same open model gives different numbers depending on **who serves it and how
 | openai/whisper-large-v3-turbo | Leaderboard (A100) | 7.83 | 200 | $0.003/min (OpenAI 4o-mini) |
 | usefulsensors/moonshine-streaming-small | Leaderboard (A100) | 7.84 | 566 | — |
 | usefulsensors/moonshine-base | Leaderboard (A100) | 9.99 | 566 | — |
+
+> **WER is not comparable across sources.** EcoHash rows are measured on LibriSpeech test-clean (the easiest English set); leaderboard rows are the 8-dataset average, which includes much harder audio. The same model scores a lower WER on clean-only audio — so EcoHash's `whisper-large-v3` at 7.26 is **not** better than the leaderboard's 7.44 for the same model; it is the easier benchmark. Compare WER only within the same Source column, and read RTFx the same way (A100 batch-64 vs single-stream end-to-end).
 
 Full data (params, notes): [speech/stt.csv](speech/stt.csv).
 
