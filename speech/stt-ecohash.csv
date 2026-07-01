@@ -1,0 +1,4 @@
+model,wer_pct_librispeech_clean_en,rtfx_end_to_end,rtfx_min,rtfx_max,price,note
+whisper-large-v3,7.26,3.0,1.7,4.7,$0.006/min,"end-to-end via API (incl network)"
+qwen3-asr-1-7b,4.36,20.0,8.0,39.5,input $0.05/1M tok,"fastest of our three end-to-end; multilingual"
+fun-asr-nano,4.00,12.3,5.9,22.9,input $0.05/1M tok,"not on the English leaderboard; multilingual"

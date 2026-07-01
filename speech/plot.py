@@ -1,4 +1,4 @@
-"""Generate benchmark charts (PNG) from the speech CSVs. Run: python plot.py"""
+"""Regenerate the benchmark charts (assets/*.png) from the CSV data."""
 
 import csv
 import os
@@ -6,11 +6,12 @@ import os
 import matplotlib
 
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ASSETS = os.path.join(os.path.dirname(HERE), "assets")
 PURPLE = "#6D28D9"
+GREY = "#9CA3AF"
 
 
 def read_csv(name):
@@ -18,31 +19,38 @@ def read_csv(name):
         return list(csv.DictReader(f))
 
 
-# STT — accuracy (WER) vs speed (RTFx, end-to-end)
-stt = read_csv("stt.csv")
-fig, ax = plt.subplots(figsize=(7, 4.5))
-for row in stt:
-    x, y = float(row["rtfx_median_end_to_end"]), float(row["wer_pct"])
-    ax.scatter(x, y, s=110, color=PURPLE, zorder=3)
-    ax.annotate(row["model"], (x, y), xytext=(7, 6), textcoords="offset points", fontsize=9)
-ax.set_xlabel("RTFx (end-to-end via API) — higher is faster")
-ax.set_ylabel("WER % — lower is better")
-ax.set_title("Speech-to-text: accuracy vs. speed")
-ax.grid(True, alpha=0.3)
+# STT: WER vs RTFx (Open ASR Leaderboard, A100), EcoHash models highlighted.
+fig, ax = plt.subplots(figsize=(6.2, 5))
+for r in read_csv("stt.csv"):
+    try:
+        wer, rtfx = float(r["wer_pct"]), float(r["rtfx_a100_bs64"])
+    except ValueError:
+        continue
+    eco = r["on_ecohash"].strip().lower() == "yes"
+    ax.scatter(wer, rtfx, s=95 if eco else 42, c=PURPLE if eco else GREY,
+               edgecolors="white", linewidths=0.6, zorder=3 if eco else 2)
+    if eco:
+        ax.annotate(r["model"].split("/")[-1], (wer, rtfx), fontsize=7.5,
+                    fontweight="bold", xytext=(5, 4), textcoords="offset points")
+ax.set_yscale("log")
+ax.set_xlabel("WER %  (lower is better)")
+ax.set_ylabel("RTFx on A100, batch 64  (higher is faster, log)")
+ax.set_title("Open speech-to-text: accuracy vs speed\nHF Open ASR Leaderboard (A100) — purple = served on EcoHash")
+ax.grid(True, which="both", alpha=0.2)
 fig.tight_layout()
-fig.savefig(os.path.join(ASSETS, "stt-wer-vs-rtfx.png"), dpi=150)
+fig.savefig(os.path.join(ASSETS, "stt-wer-vs-rtfx.png"), dpi=140)
 
-# TTS — time to first audio (end-to-end)
-tts = read_csv("tts.csv")
-models = [r["model"] for r in tts]
-ttfa = [float(r["ttfa_ms_end_to_end"]) for r in tts]
-fig, ax = plt.subplots(figsize=(7, 4.5))
-bars = ax.bar(models, ttfa, color=PURPLE, width=0.5, zorder=3)
-ax.bar_label(bars, fmt="%.0f ms", padding=3, fontsize=9)
-ax.set_ylabel("TTFA (ms, end-to-end via API) — lower is better")
-ax.set_title("Text-to-speech: time to first audio")
-ax.grid(True, axis="y", alpha=0.3)
+# TTS: time to first audio (mixed measured/claimed), EcoHash models highlighted.
+pts = [(r["model"], float(r["ttfa_ms"]), r["on_ecohash"].strip().lower() == "yes")
+       for r in read_csv("tts.csv") if r.get("ttfa_ms")]
+pts.sort(key=lambda x: x[1], reverse=True)
+fig, ax = plt.subplots(figsize=(6.2, 5))
+ax.barh([p[0] for p in pts], [p[1] for p in pts],
+        color=[PURPLE if p[2] else GREY for p in pts])
+ax.set_xlabel("TTFA ms  (lower is better; mixed measured / vendor-claimed)")
+ax.set_title("Open text-to-speech: time to first audio\npurple = served on EcoHash")
+ax.grid(True, axis="x", alpha=0.2)
 fig.tight_layout()
-fig.savefig(os.path.join(ASSETS, "tts-ttfa.png"), dpi=150)
+fig.savefig(os.path.join(ASSETS, "tts-ttfa.png"), dpi=140)
 
-print("wrote charts to", ASSETS)
+print("charts written to", os.path.normpath(ASSETS))

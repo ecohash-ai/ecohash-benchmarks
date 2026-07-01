@@ -1,4 +1,23 @@
-model,wer_pct,rtfx_median_end_to_end,rtfx_min,rtfx_max,samples,errors,dataset,measured
-whisper-large-v3,7.26,3.0,1.7,4.7,50,0,librispeech-clean-en,2026-06-23
-qwen3-asr-1-7b,4.36,20.0,8.0,39.5,50,0,librispeech-clean-en,2026-06-23
-fun-asr-nano,4.00,12.3,5.9,22.9,50,0,librispeech-clean-en,2026-06-23
+rank,model,params_b,license,wer_pct,rtfx_a100_bs64,on_ecohash,price_thirdparty,note
+1,CohereLabs/cohere-transcribe-03-2026,2,Open,5.42,524.88,no,,"most accurate open model"
+3,ibm-granite/granite-4.0-1b-speech,2,Open,5.52,280.02,no,,"IBM; high accuracy"
+4,nvidia/canary-qwen-2.5b,2.5,Open,5.63,418.28,no,"Replicate $0.00074/min","English only"
+5,ibm-granite/granite-speech-3.3-8b,9,Open,5.74,145.42,no,,"IBM large"
+6,Qwen/Qwen3-ASR-1.7B,1.7,Open,5.76,147.93,yes,,"multilingual; served on EcoHash as qwen3-asr-1-7b"
+8,ibm-granite/granite-speech-3.3-2b,3,Open,6.00,270.57,no,,"IBM"
+9,microsoft/Phi-4-multimodal-instruct,6,Open,6.02,151.10,no,,"multimodal with ASR"
+10,nvidia/parakeet-tdt-0.6b-v2,0.6,Open,6.05,3386.02,no,,"English only; very high throughput"
+13,nvidia/parakeet-tdt-0.6b-v3,0.6,Open,6.32,3332.74,no,"Together $0.0015/min","+25 EU languages; streaming"
+14,nvidia/canary-1b-flash,1,Open,6.35,1045.75,no,,"4 languages; speech translation"
+15,kyutai/stt-2.6b-en,2.6,Open,6.40,88.37,no,,"streaming architecture"
+17,Qwen/Qwen3-ASR-0.6B,0.6,Open,6.42,166.23,no,,"smaller Qwen3-ASR"
+19,mistralai/Voxtral-Small-24B-2507,24,Open,6.62,54.09,no,"Mistral $0.004/min","LLM-capable; slower"
+26,nvidia/parakeet-tdt-1.1b,1.1,Open,7.02,2390.61,no,,"high throughput"
+28,mistralai/Voxtral-Mini-3B-2507,5,Open,7.05,109.86,no,"DeepInfra $0.001/min; Mistral $0.002/min","Mistral small"
+35,nvidia/parakeet-ctc-1.1b,1.1,Open,7.40,2728.52,no,,"pure CTC; simplest/fastest decode"
+38,openai/whisper-large-v3,2,Open,7.44,145.51,yes,,"99 languages; most adopted; served on EcoHash as whisper-large-v3"
+39,nvidia/parakeet-tdt_ctc-110m,0.11,Open,7.49,5345.14,no,,"highest throughput on the board"
+41,distil-whisper/distil-large-v3,0.8,Open,7.52,214.42,no,,"distilled Whisper; English only"
+46,openai/whisper-large-v3-turbo,0.8,Open,7.83,200.19,no,"Groq $0.04/hr; OpenAI(4o-mini) $0.003/min","Whisper turbo; #1 HF downloads"
+48,usefulsensors/moonshine-streaming-small,0.12,Open,7.84,566.33,no,,"on-device; low-latency streaming"
+66,usefulsensors/moonshine-base,0.06,Open,9.99,565.97,no,,"tiny; on-device"
