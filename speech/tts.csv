@@ -1,8 +1,10 @@
-model,provider,params,license,ttfa,ttfa_ms,streaming,on_ecohash,price_thirdparty,note
-Kokoro-82M,hexgrad,82M,Apache-2.0,~325ms (measured),325,no,yes,"DeepInfra $0.62/1M; Together $10/1M; fal $20/1M","HF #1 downloads; served on EcoHash as kokoro-82m"
-Chatterbox-0.5B,Resemble,0.5B,MIT,~472ms (measured),472,yes,no,,"emotion control"
-MeloTTS,MyShell,~52M,MIT,non-streaming (RTF~0.02),,no,no,,"runs realtime on CPU"
-Orpheus-3B,Canopy,3B,Apache-2.0,~200ms (claimed),200,yes,no,"Together $15/1M","natural prosody"
-CosyVoice2-0.5B,Alibaba,0.5B,Apache-2.0,~150ms (claimed),150,yes,no,"SiliconFlow $7.15/1M","multilingual; zero-shot voice clone"
-Qwen3-TTS,Alibaba,1.7B/0.6B,Apache-2.0,97ms (claimed),97,yes,yes,"Alibaba DashScope ~CNY 80/1M","served on EcoHash as qwen3-tts; multilingual"
-Parler-TTS-large,Hugging Face,2.2B,Apache-2.0,<500ms (claimed),500,yes,no,,"text-prompted style; English"
+model,source,on_ecohash,provider,params,ttfa,ttfa_ms,streaming,price,note
+kokoro-82m,EcoHash,yes,EcoHash,82M,325ms (end-to-end),325,no,$0.50/1M,"end-to-end via API; non-streaming full-clip"
+qwen3-tts,EcoHash,yes,EcoHash,1.7B/0.6B,3538ms (end-to-end),3538,no,$10/1M,"end-to-end via API; non-streaming"
+Kokoro-82M,Open model,yes,hexgrad,82M,~325ms (measured),325,no,$0.62/1M (DeepInfra),"HF #1 downloads; Apache-2.0"
+Chatterbox-0.5B,Open model,no,Resemble,0.5B,~472ms (measured),472,yes,,"emotion control; MIT"
+MeloTTS,Open model,no,MyShell,~52M,non-streaming,,no,,"realtime on CPU; MIT"
+Orpheus-3B,Open model,no,Canopy,3B,~200ms (claimed),200,yes,$15/1M (Together),"natural prosody; Apache-2.0"
+CosyVoice2-0.5B,Open model,no,Alibaba,0.5B,~150ms (claimed),150,yes,$7.15/1M (SiliconFlow),"zero-shot voice clone; Apache-2.0"
+Qwen3-TTS,Open model,yes,Alibaba,1.7B/0.6B,97ms (claimed),97,yes,~CNY 80/1M (DashScope),"multilingual; served on EcoHash; Apache-2.0"
+Parler-TTS-large,Open model,no,Hugging Face,2.2B,<500ms (claimed),500,yes,,"text-prompted style; English; Apache-2.0"

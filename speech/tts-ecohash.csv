@@ -1,3 +1,0 @@
-model,ttfa_ms_end_to_end,rtf_median,streaming,price,note
-kokoro-82m,325,0.077,no,$0.50/1M,"end-to-end via API (incl network); non-streaming full-clip"
-qwen3-tts,3538,0.593,no,$10/1M,"end-to-end via API; non-streaming"

@@ -1,15 +1,15 @@
 # Speech benchmarks
 
-End-to-end (via API) quality and speed for EcoHash's speech models.
+- `stt.csv` — transcription: the Open ASR Leaderboard landscape + EcoHash end-to-end rows
+- `tts.csv` — synthesis: popular open models + EcoHash end-to-end rows
+- `benchmark.py` — measure the EcoHash (end-to-end) numbers with your own API key
+- `plot.py` — regenerate the charts from the CSVs
 
-- `stt.csv` — transcription: WER + RTFx (end-to-end)
-- `tts.csv` — synthesis: TTFA + RTF (end-to-end)
-- `benchmark.py` — the measurement script; reproduce with your own API key
-
-See the [top-level README](../README.md) for methodology, result tables, and caveats.
+See the [top-level README](../README.md) for the result tables, methodology, and caveats.
 
 ```bash
-pip install openai jiwer datasets soundfile numpy
+pip install openai jiwer datasets soundfile numpy requests matplotlib
 export ECOHASH_API_KEY=eco_...
-python benchmark.py --stt-n 50 --tts-n 8
+python benchmark.py --stt-n 50 --tts-n 8   # measure EcoHash end-to-end
+python plot.py                             # regenerate charts
 ```

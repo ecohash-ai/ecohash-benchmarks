@@ -25,83 +25,68 @@ Open, reproducible performance benchmarks for the open models served on EcoHash 
 
 ## Methodology
 
-Two kinds of numbers, kept separate on purpose:
+The same open model gives different numbers depending on **who serves it and how it's measured**. Each table below lists open models with a **Source** column; **EcoHash rows (in bold) are our own measurements**, as one provider among others.
 
-**1. Open-model landscape (reference).** WER and RTFx in the STT landscape come from the [HF Open ASR Leaderboard](https://huggingface.co/spaces/hf-audio/open_asr_leaderboard) — all models run on a single **A100-80GB, batch 64**, and WER is the English 8-dataset average. That RTFx is an **A100** figure, not RTX PRO 6000 and not our measurement. The TTS landscape lists popular open models by HF downloads; TTFA is **measured where available, otherwise vendor/paper-claimed** (noted per row).
+- **Open ASR Leaderboard (A100)** — WER (English 8-dataset average) and RTFx from the [HF Open ASR Leaderboard](https://huggingface.co/spaces/hf-audio/open_asr_leaderboard): all models on a single A100-80GB, batch 64. That RTFx is A100 throughput, not our hardware.
+- **EcoHash (end-to-end)** — measured client-side through our API (`https://api.ecohash.com/v1`) on **NVIDIA RTX PRO 6000**, so it includes network + queueing. STT WER is on LibriSpeech (clean, English, simple normalization). Measured 2026-06-23.
 
-**2. Measured on EcoHash (end-to-end).** The "measured on EcoHash" tables are our own numbers, measured **client-side end-to-end through the API** (`https://api.ecohash.com/v1`) on **NVIDIA RTX PRO 6000** endpoints, so they include network + queueing. STT: WER via [jiwer](https://github.com/jitsi/jiwer) on LibriSpeech (clean, English, simple normalization), RTFx = audio ÷ latency. TTS: TTFA = time to first audio byte, RTF = total time ÷ audio duration. Warmup + median across samples. Measured **2026-06-23** (STT: 50 clips/model; TTS: 8 sentences/model).
+> Numbers from different sources are **not apples-to-apples** (A100 batch throughput vs single-stream end-to-end; different WER sets) — the Source column says how each row was produced. Prices are per-provider and indicative. A pure-GPU EcoHash rerun with more models is planned.
 
-> **Caveats.** Our end-to-end RTFx/TTFA are **not comparable** to the A100 leaderboard (short clips make network + overhead dominant, so RTFx reads low); a pure-GPU rerun with more models is planned. WER on LibriSpeech-clean is lower than the leaderboard's 8-dataset average and uses a simple normalizer — for cross-model comparison only.
+## Speech-to-text
 
-## Speech-to-text — open-model landscape
+**Bold = measured by EcoHash.**
 
-Source: HF Open ASR Leaderboard (A100, batch 64; WER = English 8-dataset average). **✅ = served on EcoHash.**
+| Model | Source | WER % ↓ | RTFx ↑ | Price |
+|---|---|---|---|---|
+| **whisper-large-v3** | **EcoHash (end-to-end)** | **7.26** | **3.0** | **$0.006/min** |
+| **qwen3-asr-1-7b** | **EcoHash (end-to-end)** | **4.36** | **20.0** | **input $0.05/1M tok** |
+| **fun-asr-nano** | **EcoHash (end-to-end)** | **4.00** | **12.3** | **input $0.05/1M tok** |
+| CohereLabs/cohere-transcribe-03-2026 | Leaderboard (A100) | 5.42 | 525 | — |
+| ibm-granite/granite-4.0-1b-speech | Leaderboard (A100) | 5.52 | 280 | — |
+| nvidia/canary-qwen-2.5b | Leaderboard (A100) | 5.63 | 418 | $0.00074/min (Replicate) |
+| ibm-granite/granite-speech-3.3-8b | Leaderboard (A100) | 5.74 | 145 | — |
+| Qwen/Qwen3-ASR-1.7B | Leaderboard (A100) | 5.76 | 148 | — |
+| ibm-granite/granite-speech-3.3-2b | Leaderboard (A100) | 6.00 | 271 | — |
+| microsoft/Phi-4-multimodal-instruct | Leaderboard (A100) | 6.02 | 151 | — |
+| nvidia/parakeet-tdt-0.6b-v2 | Leaderboard (A100) | 6.05 | 3386 | — |
+| nvidia/parakeet-tdt-0.6b-v3 | Leaderboard (A100) | 6.32 | 3333 | $0.0015/min (Together) |
+| nvidia/canary-1b-flash | Leaderboard (A100) | 6.35 | 1046 | — |
+| kyutai/stt-2.6b-en | Leaderboard (A100) | 6.40 | 88 | — |
+| Qwen/Qwen3-ASR-0.6B | Leaderboard (A100) | 6.42 | 166 | — |
+| mistralai/Voxtral-Small-24B-2507 | Leaderboard (A100) | 6.62 | 54 | $0.004/min (Mistral) |
+| nvidia/parakeet-tdt-1.1b | Leaderboard (A100) | 7.02 | 2391 | — |
+| mistralai/Voxtral-Mini-3B-2507 | Leaderboard (A100) | 7.05 | 110 | $0.001/min (DeepInfra) |
+| nvidia/parakeet-ctc-1.1b | Leaderboard (A100) | 7.40 | 2729 | — |
+| openai/whisper-large-v3 | Leaderboard (A100) | 7.44 | 146 | from $0.00045/min |
+| nvidia/parakeet-tdt_ctc-110m | Leaderboard (A100) | 7.49 | 5345 | — |
+| distil-whisper/distil-large-v3 | Leaderboard (A100) | 7.52 | 214 | — |
+| openai/whisper-large-v3-turbo | Leaderboard (A100) | 7.83 | 200 | $0.003/min (OpenAI 4o-mini) |
+| usefulsensors/moonshine-streaming-small | Leaderboard (A100) | 7.84 | 566 | — |
+| usefulsensors/moonshine-base | Leaderboard (A100) | 9.99 | 566 | — |
 
-| # | Model | Params (B) | WER % ↓ | RTFx (A100) ↑ | On EcoHash |
-|---|---|---|---|---|---|
-| 1 | CohereLabs/cohere-transcribe-03-2026 | 2 | 5.42 | 525 | |
-| 3 | ibm-granite/granite-4.0-1b-speech | 2 | 5.52 | 280 | |
-| 4 | nvidia/canary-qwen-2.5b | 2.5 | 5.63 | 418 | |
-| 5 | ibm-granite/granite-speech-3.3-8b | 9 | 5.74 | 145 | |
-| 6 | **Qwen/Qwen3-ASR-1.7B** | 1.7 | 5.76 | 148 | ✅ |
-| 8 | ibm-granite/granite-speech-3.3-2b | 3 | 6.00 | 271 | |
-| 9 | microsoft/Phi-4-multimodal-instruct | 6 | 6.02 | 151 | |
-| 10 | nvidia/parakeet-tdt-0.6b-v2 | 0.6 | 6.05 | 3386 | |
-| 13 | nvidia/parakeet-tdt-0.6b-v3 | 0.6 | 6.32 | 3333 | |
-| 14 | nvidia/canary-1b-flash | 1 | 6.35 | 1046 | |
-| 15 | kyutai/stt-2.6b-en | 2.6 | 6.40 | 88 | |
-| 17 | Qwen/Qwen3-ASR-0.6B | 0.6 | 6.42 | 166 | |
-| 19 | mistralai/Voxtral-Small-24B-2507 | 24 | 6.62 | 54 | |
-| 26 | nvidia/parakeet-tdt-1.1b | 1.1 | 7.02 | 2391 | |
-| 28 | mistralai/Voxtral-Mini-3B-2507 | 5 | 7.05 | 110 | |
-| 35 | nvidia/parakeet-ctc-1.1b | 1.1 | 7.40 | 2729 | |
-| 38 | **openai/whisper-large-v3** | 2 | 7.44 | 146 | ✅ |
-| 39 | nvidia/parakeet-tdt_ctc-110m | 0.11 | 7.49 | 5345 | |
-| 41 | distil-whisper/distil-large-v3 | 0.8 | 7.52 | 214 | |
-| 46 | openai/whisper-large-v3-turbo | 0.8 | 7.83 | 200 | |
-| 48 | usefulsensors/moonshine-streaming-small | 0.12 | 7.84 | 566 | |
-| 66 | usefulsensors/moonshine-base | 0.06 | 9.99 | 566 | |
+Full data (params, notes): [speech/stt.csv](speech/stt.csv).
 
-Full data (prices, notes): [speech/stt.csv](speech/stt.csv).
+## Text-to-speech
 
-## Speech-to-text — measured on EcoHash (end-to-end via API)
+**Bold = measured by EcoHash.** There is no unified TTS speed leaderboard, so open-model TTFA is measured where available, otherwise vendor-claimed.
 
-| Model | WER % (LibriSpeech clean, en) | RTFx (end-to-end) |
-|---|---|---|
-| `whisper-large-v3` | 7.26 | 3.0 |
-| `qwen3-asr-1-7b` | 4.36 | 20.0 |
-| `fun-asr-nano` | 4.00 | 12.3 |
+| Model | Source | TTFA | Streaming | Price |
+|---|---|---|---|---|
+| **kokoro-82m** | **EcoHash (end-to-end)** | **325 ms** | **no** | **$0.50/1M** |
+| **qwen3-tts** | **EcoHash (end-to-end)** | **3538 ms** | **no** | **$10/1M** |
+| Kokoro-82M | Open model (hexgrad) | ~325 ms (measured) | no | $0.62/1M (DeepInfra) |
+| Chatterbox-0.5B | Open model (Resemble) | ~472 ms (measured) | yes | — |
+| MeloTTS | Open model (MyShell) | non-streaming | no | — |
+| Orpheus-3B | Open model (Canopy) | ~200 ms (claimed) | yes | $15/1M (Together) |
+| CosyVoice2-0.5B | Open model (Alibaba) | ~150 ms (claimed) | yes | $7.15/1M (SiliconFlow) |
+| Qwen3-TTS | Open model (Alibaba) | 97 ms (claimed) | yes | ~CNY 80/1M (DashScope) |
+| Parler-TTS-large | Open model (Hugging Face) | <500 ms (claimed) | yes | — |
 
-Data: [speech/stt-ecohash.csv](speech/stt-ecohash.csv).
-
-## Text-to-speech — open-model landscape
-
-Popular open TTS models by HF downloads. There is no unified TTS speed leaderboard, so TTFA is measured where available, otherwise vendor-claimed. **✅ = served on EcoHash.**
-
-| Model | Provider | Params | TTFA | Streaming | On EcoHash |
-|---|---|---|---|---|---|
-| **Kokoro-82M** | hexgrad | 82M | ~325 ms (measured) | no | ✅ |
-| Chatterbox-0.5B | Resemble | 0.5B | ~472 ms (measured) | yes | |
-| MeloTTS | MyShell | ~52M | non-streaming | no | |
-| Orpheus-3B | Canopy | 3B | ~200 ms (claimed) | yes | |
-| CosyVoice2-0.5B | Alibaba | 0.5B | ~150 ms (claimed) | yes | |
-| **Qwen3-TTS** | Alibaba | 1.7B/0.6B | 97 ms (claimed) | yes | ✅ |
-| Parler-TTS-large | Hugging Face | 2.2B | <500 ms (claimed) | yes | |
-
-Full data (prices, notes): [speech/tts.csv](speech/tts.csv).
-
-## Text-to-speech — measured on EcoHash (end-to-end via API)
-
-| Model | TTFA (end-to-end) | RTF | Streaming |
-|---|---|---|---|
-| `kokoro-82m` | 325 ms | 0.077 | no |
-| `qwen3-tts` | 3538 ms | 0.593 | no |
-
-Data: [speech/tts-ecohash.csv](speech/tts-ecohash.csv).
+Full data (params, notes): [speech/tts.csv](speech/tts.csv).
 
 ## Reproduce
 
-Our "measured on EcoHash" numbers:
+Our EcoHash (end-to-end) numbers:
 
 ```bash
 pip install openai jiwer datasets soundfile numpy requests
@@ -116,7 +101,7 @@ pip install matplotlib
 python speech/plot.py
 ```
 
-Landscape numbers are sourced from the [HF Open ASR Leaderboard](https://huggingface.co/spaces/hf-audio/open_asr_leaderboard).
+Leaderboard numbers are sourced from the [HF Open ASR Leaderboard](https://huggingface.co/spaces/hf-audio/open_asr_leaderboard).
 
 ## License
 

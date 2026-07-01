@@ -19,11 +19,13 @@ def read_csv(name):
         return list(csv.DictReader(f))
 
 
-# STT: WER vs RTFx (Open ASR Leaderboard, A100), EcoHash models highlighted.
+# STT: WER vs RTFx from the Open ASR Leaderboard (A100); EcoHash-served highlighted.
 fig, ax = plt.subplots(figsize=(6.2, 5))
 for r in read_csv("stt.csv"):
+    if "Leaderboard" not in r["source"]:
+        continue
     try:
-        wer, rtfx = float(r["wer_pct"]), float(r["rtfx_a100_bs64"])
+        wer, rtfx = float(r["wer_pct"]), float(r["rtfx"])
     except ValueError:
         continue
     eco = r["on_ecohash"].strip().lower() == "yes"
@@ -40,9 +42,9 @@ ax.grid(True, which="both", alpha=0.2)
 fig.tight_layout()
 fig.savefig(os.path.join(ASSETS, "stt-wer-vs-rtfx.png"), dpi=140)
 
-# TTS: time to first audio (mixed measured/claimed), EcoHash models highlighted.
+# TTS: time to first audio across open models; EcoHash-served highlighted.
 pts = [(r["model"], float(r["ttfa_ms"]), r["on_ecohash"].strip().lower() == "yes")
-       for r in read_csv("tts.csv") if r.get("ttfa_ms")]
+       for r in read_csv("tts.csv") if r["source"] == "Open model" and r.get("ttfa_ms")]
 pts.sort(key=lambda x: x[1], reverse=True)
 fig, ax = plt.subplots(figsize=(6.2, 5))
 ax.barh([p[0] for p in pts], [p[1] for p in pts],
