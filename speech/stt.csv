@@ -1,0 +1,4 @@
+model,wer_pct,rtfx_median_end_to_end,rtfx_min,rtfx_max,samples,errors,dataset,measured
+whisper-large-v3,7.26,3.0,1.7,4.7,50,0,librispeech-clean-en,2026-06-23
+qwen3-asr-1-7b,4.36,20.0,8.0,39.5,50,0,librispeech-clean-en,2026-06-23
+fun-asr-nano,4.00,12.3,5.9,22.9,50,0,librispeech-clean-en,2026-06-23

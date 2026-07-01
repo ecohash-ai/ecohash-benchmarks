@@ -1,0 +1,3 @@
+model,ttfa_ms_end_to_end,rtf_median,streaming,samples,errors,measured
+kokoro-82m,325,0.077,no,8,0,2026-06-23
+qwen3-tts,3538,0.593,no,8,0,2026-06-23
