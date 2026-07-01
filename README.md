@@ -1,24 +1,17 @@
 <p align="center">
-  <img src="assets/ecohash-logo.png" alt="EcoHash" width="280">
+  <a href="https://ecohash.com"><img src="assets/ecohash-logo.png" alt="EcoHash" width="280"></a>
 </p>
 
 <p align="center">
-  <a href="https://console.ecohash.com?utm_source=github">Platform</a> •
-  <a href="https://docs.ecohash.com">Docs</a> •
-  <a href="https://ecohash.com">Website</a>
+  <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT">
+  <a href="https://docs.ecohash.com"><img src="https://img.shields.io/badge/documentation-6D28D9" alt="Documentation"></a>
+  <a href="https://x.com/ecohashdev"><img src="https://img.shields.io/badge/X-@ecohashdev-000000?logo=x&logoColor=white" alt="X"></a>
+  <a href="https://huggingface.co/ecohash-ai"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-ecohash--ai-FFD21E" alt="Hugging Face"></a>
 </p>
 
 # EcoHash Benchmarks
 
 Open, reproducible performance benchmarks for the open models served on EcoHash — an OpenAI-compatible inference API.
-
-<p align="center">
-  <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT">
-  <img src="https://img.shields.io/badge/open%20speech%20models-29-6D28D9" alt="29 open speech models">
-  <img src="https://img.shields.io/badge/measured-2026--06--23-lightgrey" alt="measured 2026-06-23">
-  <a href="https://x.com/ecohashdev"><img src="https://img.shields.io/badge/X-@ecohashdev-000000?logo=x&logoColor=white" alt="X"></a>
-  <a href="https://huggingface.co/ecohash-ai"><img src="https://img.shields.io/badge/Hugging%20Face-ecohash--ai-FFD21E?logo=huggingface&logoColor=black" alt="Hugging Face"></a>
-</p>
 
 <p align="center">
   <img src="assets/stt-wer-vs-rtfx.png" alt="Speech-to-text: WER vs RTFx" width="49%">
