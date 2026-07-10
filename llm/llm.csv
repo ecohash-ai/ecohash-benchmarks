@@ -1,0 +1,6 @@
+model,params,ttft_p95_ms,tpot_ms,single_stream_tok_s,input_price_per_1m,output_price_per_1m,best_for,note
+llama-3.1-8b-instruct,8B dense,205,7,143,0.10,0.10,general / high throughput,"highest single-card output throughput in this set"
+gpt-oss-20b,20B MoE,170,8,125,0.05,0.18,general / low cost,
+qwen2.5-7b-instruct,7B dense,257,10,100,0.20,0.20,general,
+gemma-4-31b-it,31B,191,27,37,0.50,0.50,larger general,
+qwen3-coder-30b-a3b-instruct,30B MoE (3B active),30,9,111,0.10,0.30,coding & agents,"32,768-token context"

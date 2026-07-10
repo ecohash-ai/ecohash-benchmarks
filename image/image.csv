@@ -1,0 +1,4 @@
+model,params,steps,latency_s_per_image,per_step_s,images_per_min,price_per_image,note
+flux2-klein,9B,4,1.2,0.29,52,0.02,"photographic; in-image text renders correctly"
+z-image-turbo,6B,8,3.2,0.40,20,0.01,"fast; accurate text; 8-step design point"
+qwen-image,20B,50,13.4,0.27,4.6,0.03,"strong Chinese and English text rendering"

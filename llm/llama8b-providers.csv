@@ -1,0 +1,13 @@
+provider,tok_s,ttft_ms,price_blended,is_ecohash
+EcoHash,143,205,0.10,yes
+Groq,672,950,0.05,no
+CoreWeave,137,1080,0.22,no
+Amazon Bedrock,176,820,0.22,no
+Cloudflare,207,710,0.00,no
+FriendliAI,49,520,0.10,no
+CompactifAI,152,1030,0.03,no
+DeepInfra (Turbo FP8),47,600,0.02,no
+DeepInfra,9,1320,0.02,no
+Databricks,207,990,0.18,no
+Scaleway,145,1110,0.23,no
+Novita,153,1140,0.02,no

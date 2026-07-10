@@ -1,6 +1,6 @@
 model,source,on_ecohash,provider,params,ttfa,ttfa_ms,streaming,price,note
-kokoro-82m,EcoHash,yes,EcoHash,82M,325ms (end-to-end),325,no,$0.50/1M,"end-to-end via API; non-streaming full-clip"
-qwen3-tts,EcoHash,yes,EcoHash,1.7B/0.6B,3538ms (end-to-end),3538,no,$10/1M,"end-to-end via API; non-streaming"
+kokoro-82m,EcoHash,yes,EcoHash,82M,120ms (end-to-end),120,yes,$1/1M,"end-to-end via API (RTX PRO 6000); fast enough that streaming is optional; RTF 0.02"
+qwen3-tts,EcoHash,yes,EcoHash,1.7B/0.6B,2621ms (end-to-end),2621,yes,$2/1M,"end-to-end via API; streaming; multilingual"
 Kokoro-82M,Open model,yes,hexgrad,82M,~325ms (measured),325,no,$0.62/1M (DeepInfra),"HF #1 downloads; Apache-2.0"
 Chatterbox-0.5B,Open model,no,Resemble,0.5B,~472ms (measured),472,yes,,"emotion control; MIT"
 MeloTTS,Open model,no,MyShell,~52M,non-streaming,,no,,"realtime on CPU; MIT"

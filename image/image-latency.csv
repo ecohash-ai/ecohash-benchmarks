@@ -1,0 +1,5 @@
+model,latency_s,is_ecohash,note
+flux2-klein,1.2,yes,EcoHash (FLUX.2 klein, 4 steps)
+z-image-turbo,3.2,yes,EcoHash (8 steps)
+qwen-image,13.4,yes,EcoHash (50 steps)
+FLUX.1-schnell (fal.ai),0.76,no,peer reference (prev-gen fast model)
