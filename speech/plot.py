@@ -115,4 +115,15 @@ scatter(val, "Blended price $/1M tokens  (lower is better)", "Output tokens/sec 
 # Image has no peer comparison data, so it is shown as a table plus sample images in the
 # README rather than an EcoHash-only chart.
 
+# Small variants (560px wide) for embedding in blog posts, where plain Markdown
+# image syntax renders at natural size.
+from PIL import Image  # noqa: E402
+
+for name in ["llm-ttft-tpot", "llm-price-speed", "stt-wer-vs-rtfx", "tts-ttfa"]:
+    src = os.path.join(ASSETS, f"{name}.png")
+    im = Image.open(src)
+    w = 560
+    h = round(im.height * w / im.width)
+    im.resize((w, h), Image.LANCZOS).save(os.path.join(ASSETS, f"{name}-sm.png"))
+
 print("charts written to", os.path.normpath(ASSETS))
