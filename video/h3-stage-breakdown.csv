@@ -1,0 +1,6 @@
+stage,before_s,after_s,share_after,note
+sampling,161.2,27.9,0.68,"the only stage this round touched; 3.49 s per step after"
+save video,7.3,7.3,0.18,"libx264 software encode. PyAV 18.1 in the container can build h264_nvenc, but ComfyUI's SaveVideo does not expose the codec"
+vae decode video,5.6,5.5,0.14,"36-layer ViT decoder, untouched"
+text encode,0.7,0.7,0.02,"qwen3vl-32B, but only about 100 prompt tokens and the weights stay resident"
+total,174.8,40.8,1.00,"measured wall clock. The four stage figures are medians over three prompts and sum to within a few tenths of it, not exactly; after optimisation text encoding also hits ComfyUI's node cache on a repeated prompt"

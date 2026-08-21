@@ -24,7 +24,7 @@ The same open model gives different numbers depending on who serves it and how i
 
 - **Speech** (2026-07): STT reports WER on LibriSpeech test-clean and RTFx as peak aggregate throughput under concurrency; TTS reports TTFA (time to first audio). Audio metrics include network.
 - **Image** (2026-07): 1024×1024, each model at its design step count; latency per image, time per step, and images per minute.
-- **LLM** (2026-07-08): each model is driven from 1 to 256 concurrent requests until p95 latency crosses a per-size SLO. We report TTFT (time to first token, p95), TPOT (time per output token), single-stream tokens/sec (1000/TPOT), and peak output throughput under concurrency.
+- **LLM**: each model is driven from 1 to 256 concurrent requests until p95 latency crosses a per-size SLO. We report TTFT (time to first token, p95), TPOT (time per output token), single-stream tokens/sec at concurrency 1, and peak output throughput under concurrency.
 - **Open ASR Leaderboard (A100)**: WER (English 8-dataset average) and RTFx from the [HF Open ASR Leaderboard](https://huggingface.co/spaces/hf-audio/open_asr_leaderboard), all models on one A100-80GB, batch 64. That RTFx is A100 throughput, not our hardware.
 
 > Numbers from different sources are not directly comparable. WER on LibriSpeech test-clean is easier than the leaderboard's 8-dataset average, so a lower EcoHash WER does not mean the model beats its leaderboard row. Compare within the same Source column. Prices are per-provider and indicative.
@@ -108,28 +108,71 @@ Same prompt across the three models: "a red apple on a weathered wooden table, s
 
 Full data: [image/image.csv](image/image.csv).
 
+## Video generation
+
+Two self-hosted video models, each on one RTX PRO 6000, single replica. All video output is
+priced at $0.05 per second. Wan2.2 measured 2026-08-10, the distilled t2v config and
+MiniMax H3 on 2026-08-18.
+
+| Model | Config | Before | After | Speedup | Price / clip |
+|---|---|---|---|---|---|
+| **minimax-h3** | 1344x768, 73 frames (3.04 s) | 174.8 s | **40.8 s** | **4.28x** | $0.152 |
+| **wan22-t2v-a14b** | 848x480, 49 frames, 4 steps, CFG 1.0 | 62.7 s | **10.7 s** | **5.86x** | $0.153 |
+| **wan22-t2v-a14b** | 848x480, 49 frames, 20 steps, CFG 4.0 | 132.3 s | **62.7 s** | **2.11x** | $0.153 |
+| **wan22-s2v-14b** | 832x1088, 77 frames, 720 tier | 1025.7 s | **352.9 s** | **2.91x** | $0.250 |
+| **wan22-s2v-14b** | 512x704, 77 frames, 480 tier | 307.1 s | **93.9 s** | **3.27x** | $0.250 |
+
+The two t2v rows chain: the 4-step row's "before" is the 20-step row's "after". No weights
+were converted and no API contract changed in either model.
+
+<p align="center">
+  <img src="assets/video-before-after.png" alt="Video generation before and after optimisation" width="62%">
+</p>
+
+Three of the ten changes tried on Wan2.2 t2v returned nothing, and fp8 quantisation worth
+1.29x on t2v was worth 0.6% on s2v. [MiniMax H3 and Wan2.2 video generation, on one RTX PRO
+6000](video/video-models-on-rtx-pro-6000.md) has the per-technique numbers, the stage
+breakdown, and the ones that failed.
+
+Full data: [video/video.csv](video/video.csv),
+[video/video-techniques.csv](video/video-techniques.csv).
+
 ## Large language models
 
-Measured on one RTX PRO 6000, end-to-end, 2026-07-08. Single-stream tokens/sec is what one user's request sees.
+Measured on one RTX PRO 6000, end-to-end. These are single-request numbers rather than aggregate throughput: single-stream tok/s is measured at concurrency 1.
 
-| Model | Params | TTFT p95 | TPOT | Single-stream tok/s | Price in / out (per 1M) |
-|---|---|---|---|---|---|
-| llama-3.1-8b-instruct | 8B | 205 ms | 7 ms | ~143 | $0.10 / $0.10 |
-| gpt-oss-20b | 20B MoE | 170 ms | 8 ms | ~125 | $0.05 / $0.18 |
-| qwen2.5-7b-instruct | 7B | 257 ms | 10 ms | ~100 | $0.20 / $0.20 |
-| gemma-4-31b-it | 31B | 191 ms | 27 ms | ~37 | $0.50 / $0.50 |
-| qwen3-coder-30b-a3b-instruct | 30B MoE (3B active) | 30 ms | 9 ms | ~111 | $0.10 / $0.30 |
+| Model | Params | TTFT p95 | TPOT | Single-stream tok/s | Price in / out (per 1M) | Measured |
+|---|---|---|---|---|---|---|
+| qwen3.6-35b-a3b | 35B MoE (3B active) | 170 ms | 4 ms | ~213 | $0.40 / $0.40 | 2026-08-19 |
+| qwen3.5-35b-a3b | 35B MoE (3B active) | 173 ms | 4 ms | ~206 | $0.40 / $0.40 | 2026-08-19 |
+| llama-3.1-8b-instruct | 8B | 205 ms | 7 ms | ~143 | $0.10 / $0.10 | 2026-07-08 |
+| gpt-oss-20b | 20B MoE | 170 ms | 8 ms | ~125 | $0.20 / $0.28 | 2026-07-08 |
+| qwen3-coder-30b-a3b-instruct | 30B MoE (3B active) | 30 ms | 9 ms | ~111 | $0.10 / $0.30 | 2026-07-08 |
+| qwen3.5-27b | 27B | 186 ms | 11 ms | ~90 | $0.30 / $0.60 | 2026-08-19 |
+| qwen3.6-27b | 27B | 187 ms | 11 ms | ~88 | $0.30 / $0.60 | 2026-08-19 |
+| qwen3-vl-8b-instruct | 8B | 162 ms | 12 ms | ~78 | $0.15 / $0.50 | 2026-08-19 |
+| qwen3.8-27b | 27B | 179 ms | 13 ms | ~78 | $0.30 / $0.60 | 2026-08-19 |
+| gemma-4-31b-it | 31B | 191 ms | 27 ms | ~37 | $0.50 / $0.50 | 2026-07-08 |
 
 Peak output throughput under concurrency reaches about 11,500 tok/s on `llama-3.1-8b-instruct` and 8,900 tok/s on `gpt-oss-20b`. With 8k-token prompts, prefill throughput reaches roughly 170k to 220k tok/s, which makes long-context and RAG workloads the most cost-effective use of the card.
 
-Same model, different providers. These compare `llama-3.1-8b-instruct` across providers, EcoHash (purple) against public numbers from Artificial Analysis (grey). EcoHash has the lowest time to first token in the field. On price and per-token speed it sits in the GPU pack, and it serves the model at full BF16 precision where many providers default to FP8.
+The qwen3.5, 3.6 and 3.8 models run MTP speculative decoding off a draft head their checkpoints already carry. On `qwen3.8-27b` it takes per-token latency from 22 ms to 13 ms, and the concurrency one card holds inside the same latency budget from 32 to 64. [What speculative decoding did for Qwen3.8-27B](llm/speculative-decoding-qwen3.8-27b.md) has the rest.
+
+Same open model, different providers, EcoHash in purple. It has the lowest time to first token on both charts. We also publish the precision behind each number, which not every provider does: FP8 for `llama-3.1-8b-instruct`, `gemma-4-31b-it` and the qwen3.5 / 3.6 / 3.8 models, BF16 for `qwen3-coder-30b-a3b-instruct` and `qwen3-vl-8b-instruct`, MXFP4 for `gpt-oss-20b` as the vendor ships it.
 
 <p align="center">
   <img src="assets/llm-ttft-tpot.png" alt="Llama-3.1-8B TTFT vs TPOT" width="49%">
   <img src="assets/llm-price-speed.png" alt="Llama-3.1-8B price vs speed" width="49%">
 </p>
 
-Full data: [llm/llm.csv](llm/llm.csv).
+<p align="center">
+  <img src="assets/llm-ttft-tpot-qwen38.png" alt="Qwen3.8-27B TTFT vs TPOT" width="49%">
+  <img src="assets/llm-price-speed-qwen38.png" alt="Qwen3.8-27B price vs speed" width="49%">
+</p>
+
+<p align="center"><sub>Llama-3.1-8B peers from Artificial Analysis · Qwen3.8-27B peers from OpenRouter (2026-08); blended price = (3×input + 1×output) / 4</sub></p>
+
+Full data: [llm/llm.csv](llm/llm.csv), [llm/llama8b-providers.csv](llm/llama8b-providers.csv), [llm/qwen38-providers.csv](llm/qwen38-providers.csv).
 
 ## Reproduce
 

@@ -1,0 +1,3 @@
+arm,max_concurrency_at_slo,out_tok_s_at_max,tpot_p95_ms_at_max,ttft_p95_ms_at_max,req_s_at_max,revenue_per_gpu_hour,peak_out_tok_s,peak_at_concurrency,stop_reason
+baseline,32,999.9,29,465,6.67,2.60,1284.8,48,p95 TPOT 34ms at C=48
+mtp-k3,64,1954.0,30,955,13.03,5.08,2254.7,96,p95 TTFT 5779ms at C=96

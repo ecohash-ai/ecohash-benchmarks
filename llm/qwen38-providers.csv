@@ -1,0 +1,7 @@
+provider,tok_s,ttft_ms,price_in,price_out,price_blended,is_ecohash
+EcoHash,78,179,0.30,0.60,0.375,yes
+Venice,100,1690,0.45,3.20,1.138,no
+Reka AI,50,1560,0.45,3.20,1.138,no
+AkashML,35,1440,0.45,3.20,1.138,no
+Chutes,23,2060,0.40,3.00,1.050,no
+io.net,23,1080,0.48,3.40,1.210,no

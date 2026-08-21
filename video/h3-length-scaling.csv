@@ -1,0 +1,4 @@
+frames,clip_seconds,resolution,latency_s,gpu_s_per_video_s,note
+73,3.04,1344x768,41.0,13.5,"cheapest per second of video"
+124,5.17,768x1344,82.5,16.0,"the length the multi-shot template uses"
+209,8.71,1344x768,156.2,17.9,"2.86x the frames of the first row costs 3.78x the time"

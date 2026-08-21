@@ -1,0 +1,13 @@
+config,k,load,acceptance_length,single_stream_tok_s,tpot_ms
+baseline,0,math,,44.1,22.25
+baseline,0,code,,44.3,22.25
+baseline,0,chat,,44.2,22.25
+mtp,1,math,1.91,69.3,14.44
+mtp,1,code,1.78,64.9,15.99
+mtp,1,chat,1.73,63.7,16.53
+mtp,2,math,2.69,87.9,11.88
+mtp,2,code,2.28,75.1,13.96
+mtp,2,chat,2.18,72.5,15.14
+mtp,3,math,3.39,99.9,10.57
+mtp,3,code,2.61,78.9,14.12
+mtp,3,chat,2.52,76.9,14.54

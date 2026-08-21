@@ -1,0 +1,6 @@
+model,variant,resolution,frames,clip_seconds,steps,cfg,before_s,after_s,speedup,gpu_s_per_video_s_after,price_per_video_second,price_per_clip,measured,note
+minimax-h3,text to video,1344x768,73,3.04,8,,174.8,40.8,4.28,13.4,0.05,0.152,2026-08-18,"73 frames at 24 fps; seed 42; before = ComfyUI bundled template defaults"
+wan22-t2v-a14b,engine swap,848x480,49,3.06,20,4.0,132.3,62.7,2.11,20.5,0.05,0.153,2026-08-10,"49 frames at 16 fps; before = in-house diffusers server"
+wan22-t2v-a14b,4-step distilled,848x480,49,3.06,4,1.0,62.7,10.7,5.86,3.5,0.05,0.153,2026-08-18,"before = the 2026-08-10 result above; LightX2V 4-step LoRA fused into both experts"
+wan22-s2v-14b,720 tier,832x1088,77,5.0,20,,1025.7,352.9,2.91,70.6,0.05,0.250,2026-08-10,"clip length is set by the audio, about 5 s here; width/height are an area budget, not the output size"
+wan22-s2v-14b,480 tier,512x704,77,5.0,20,,307.1,93.9,3.27,18.8,0.05,0.250,2026-08-10,"the tier most production traffic uses"
