@@ -219,9 +219,10 @@ Add one flag to the vLLM launch arguments:
 --speculative-config={"method":"mtp","num_speculative_tokens":3}
 ```
 
-Everything else stays the same. The deployment manifest is in
-[ecolink-infra](https://gitlab.ecohash.com/ecohash/ecolink-infra), and the gateway path was
-measured with `capacity_test.py` from the EcoLink repo, unmodified.
+Everything else stays the same: same vLLM release, same card, same serving config. The
+gateway path was measured with an unmodified `capacity_test.py`, our internal load
+generator; the request pattern it produces is described under Method above, so any load
+tool that reproduces that pattern gives comparable numbers.
 
 The model is served on EcoHash as `qwen3.8-27b` through an OpenAI-compatible API:
 

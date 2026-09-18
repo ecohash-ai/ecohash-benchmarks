@@ -1,9 +1,9 @@
 # Speech benchmarks
 
-- `stt.csv` — transcription: the Open ASR Leaderboard landscape + EcoHash end-to-end rows
-- `tts.csv` — synthesis: popular open models + EcoHash end-to-end rows
-- `benchmark.py` — measure the EcoHash (end-to-end) numbers with your own API key
-- `plot.py` — regenerate the charts from the CSVs
+- `stt.csv`, transcription: the Open ASR Leaderboard field plus EcoHash end-to-end rows
+- `tts.csv`, synthesis: popular open models plus EcoHash end-to-end rows
+- `benchmark.py`: measure the EcoHash (end-to-end) numbers with your own API key
+- `plot.py`: regenerate the charts from the CSVs
 
 See the [top-level README](../README.md) for the result tables, methodology, and caveats.
 

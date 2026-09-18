@@ -1,17 +1,17 @@
 <p align="center">
-  <a href="https://ecohash.com"><img src="assets/ecohash-logo.png" alt="EcoHash" width="280"></a>
+  <a href="https://ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=devrel&utm_content=benchmarks-readme-logo"><img src="assets/ecohash-logo.png" alt="EcoHash" width="280"></a>
 </p>
 
 <p align="center">
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT">
-  <a href="https://docs.ecohash.com"><img src="https://img.shields.io/badge/documentation-6D28D9" alt="Documentation"></a>
+  <a href="https://docs.ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=devrel&utm_content=benchmarks-readme-docs"><img src="https://img.shields.io/badge/documentation-6D28D9" alt="Documentation"></a>
   <a href="https://x.com/ecohashdev"><img src="https://img.shields.io/badge/X-@ecohashdev-000000?logo=x&logoColor=white" alt="X"></a>
   <a href="https://huggingface.co/ecohash-ai"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-ecohash--ai-FFD21E" alt="Hugging Face"></a>
 </p>
 
 # EcoHash Benchmarks
 
-Open performance benchmarks for the open models served on EcoHash, an OpenAI-compatible inference API. All EcoHash numbers are measured on a single NVIDIA RTX PRO 6000 (Blackwell, 96 GB).
+Open performance benchmarks for the open models served on [EcoHash](https://ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=devrel&utm_content=benchmarks-readme-intro), an OpenAI-compatible inference API. All EcoHash numbers are measured on a single NVIDIA RTX PRO 6000 (Blackwell, 96 GB).
 
 <p align="center">
   <img src="assets/stt-wer-vs-rtfx.png" alt="Speech-to-text: WER vs RTFx" width="49%">
@@ -36,7 +36,7 @@ The same open model gives different numbers depending on who serves it and how i
 | Model | Source | WER % ↓ | RTFx ↑ | Price |
 |---|---|---|---|---|
 | **qwen3-asr-1-7b** | **EcoHash (end-to-end)** | **3.28** | **360** | **input $0.05/1M tok** |
-| **whisper-large-v3** | **EcoHash (end-to-end)** | **3.64** | **45** | **$0.006/min** |
+| **whisper-large-v3** [^retired] | **EcoHash (end-to-end)** | **3.64** | **45** | **$0.006/min** |
 | **whisper-large-v3-turbo** | **EcoHash (end-to-end)** | **4.37** | **59** | **$0.006/min** |
 | **fun-asr-nano** | **EcoHash (end-to-end)** | **3.83** | **21** | **input $0.05/1M tok** |
 | CohereLabs/cohere-transcribe-03-2026 | Leaderboard (A100) | 5.42 | 525 | - |
@@ -65,6 +65,11 @@ The same open model gives different numbers depending on who serves it and how i
 > WER is not comparable across sources. EcoHash rows are measured on LibriSpeech test-clean (the easiest English set) with simple normalization; leaderboard rows are the 8-dataset average, which includes much harder audio. Read WER only within the same Source column.
 
 Full data: [speech/stt.csv](speech/stt.csv).
+
+
+[^retired]: Measured 2026-07. `whisper-large-v3` has since been removed from the
+EcoHash catalog and can no longer be called; `whisper-large-v3-turbo`, in the row below,
+is the current Whisper on the platform. The row is kept because the measurement stands.
 
 ## Text-to-speech
 
@@ -180,11 +185,21 @@ The speech numbers use the runner in this repo:
 
 ```bash
 pip install openai jiwer datasets soundfile numpy requests
-export ECOHASH_API_KEY=eco_...   # create one at console.ecohash.com
+export ECOHASH_API_KEY=eco_...   # create one at https://console.ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=devrel&utm_content=benchmarks-reproduce
 python speech/benchmark.py --stt-n 50 --tts-n 8
 ```
 
+It discovers the active speech models from the catalog, so it only ever tests models you
+can actually call today.
+
+Last run 2026-09-18 with Python 3.12.13 and openai 3.15.0, against a 39-model catalog.
+
 LLM and image numbers were measured with an EcoHash load-test harness (concurrency sweep against the API); the methodology for each is described in its section above. Leaderboard numbers come from the [HF Open ASR Leaderboard](https://huggingface.co/spaces/hf-audio/open_asr_leaderboard), and the LLM peer numbers come from [Artificial Analysis](https://artificialanalysis.ai).
+
+## Related
+
+- Runnable code against the same API: [ecohash-examples](https://github.com/ecohash-ai/ecohash-examples)
+- Dify model provider plugin: [ecohash-dify-plugin](https://github.com/ecohash-ai/ecohash-dify-plugin)
 
 ## License
 

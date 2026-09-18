@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-benchmark.py — measure quality and speed of the speech models served on EcoHash.
+benchmark.py: measure quality and speed of the speech models served on EcoHash.
 
 What it measures:
   STT (speech-to-text): WER (word error rate on labeled audio) + RTFx (audio duration / latency)
@@ -152,7 +152,7 @@ def tts_one(base, key, model, text, voice, fmt, verify):
 def run_stt(base, key, models, clips, args, verify):
     rows = []
     for model in models:
-        print(f"\n[STT] {model} — warmup {args.warmup}, 测 {len(clips)} 条", flush=True)
+        print(f"\n[STT] {model}: warmup {args.warmup}, {len(clips)} clips", flush=True)
         for i in range(args.warmup):
             if clips:
                 stt_one(base, key, model, to_wav(*clips[0][:2]), verify)
@@ -177,7 +177,7 @@ def run_stt(base, key, models, clips, args, verify):
                      "err": errs[0] if errs else "", "nerr": len(errs)})
         wer_s = f"{wer:.2f}%" if wer is not None else "n/a"
         rtfx_s = f"{statistics.median(rtfx):.1f}" if rtfx else "n/a"
-        print(f"\n  -> WER={wer_s}  RTFx(中位)={rtfx_s}  错误 {len(errs)}/{len(clips)}", flush=True)
+        print(f"\n  -> WER={wer_s}  RTFx(median)={rtfx_s}  errors {len(errs)}/{len(clips)}", flush=True)
     return rows
 
 
@@ -186,7 +186,7 @@ def run_tts(base, key, models, args, verify):
     texts = TTS_TEXTS[:args.tts_n]
     for model in models:
         voice = TTS_VOICE.get(model, DEFAULT_VOICE)
-        print(f"\n[TTS] {model} (voice={voice}) — warmup {args.warmup}, 测 {len(texts)} 句", flush=True)
+        print(f"\n[TTS] {model} (voice={voice}): warmup {args.warmup}, {len(texts)} sentences", flush=True)
         for i in range(args.warmup):
             tts_one(base, key, model, texts[0], voice, args.tts_format, verify)
         ttfa, total, rtf, errs = [], [], [], []
@@ -203,9 +203,9 @@ def run_tts(base, key, models, args, verify):
                 status = "ttfa=%.0fms" % (res["ttfa"] * 1000) if res["ttfa"] is not None else "ok"
             print(f"  {k}/{len(texts)} {status}        ", end="\r", flush=True)
             time.sleep(args.sleep)
-        streaming = "否(疑非流式)"
+        streaming = "no (looks non-streaming)"
         if ttfa and total and statistics.median(ttfa) < 0.85 * statistics.median(total):
-            streaming = "是"
+            streaming = "yes"
         rows.append({"model": model, "ok": len(total), "n": len(texts),
                      "ttfa_med": statistics.median(ttfa) if ttfa else None,
                      "total_med": statistics.median(total) if total else None,
@@ -213,7 +213,7 @@ def run_tts(base, key, models, args, verify):
                      "streaming": streaming, "err": errs[0] if errs else "", "nerr": len(errs)})
         ttfa_s = f"{statistics.median(ttfa):.0f}ms" if ttfa else "n/a"
         rtf_s = f"{statistics.median(rtf):.3f}" if rtf else "n/a"
-        print(f"\n  -> TTFA(中位)={ttfa_s}  RTF(中位)={rtf_s}  流式={streaming}  错误 {len(errs)}/{len(texts)}", flush=True)
+        print(f"\n  -> TTFA(median)={ttfa_s}  RTF(median)={rtf_s}  streaming={streaming}  errors {len(errs)}/{len(texts)}", flush=True)
     return rows
 
 
@@ -221,17 +221,17 @@ def main():
     p = argparse.ArgumentParser(description="Measure WER / RTFx / TTFA for EcoHash speech models")
     p.add_argument("--api-key", default=os.environ.get("ECOHASH_API_KEY", ""))
     p.add_argument("--base-url", default=DEFAULT_BASE)
-    p.add_argument("--models", default="", help="逗号分隔覆盖；默认自动发现平台 active 语音模型")
-    p.add_argument("--stt-n", type=int, default=30, help="STT 测试条数")
-    p.add_argument("--tts-n", type=int, default=8, help="TTS 测试句数（最多 8）")
+    p.add_argument("--models", default="", help="comma separated override; by default, discover active speech models from the platform")
+    p.add_argument("--stt-n", type=int, default=30, help="number of STT clips")
+    p.add_argument("--tts-n", type=int, default=8, help="number of TTS sentences (8 max)")
     p.add_argument("--warmup", type=int, default=2)
-    p.add_argument("--sleep", type=float, default=0.3, help="请求间隔秒，避让 per-key 限流")
-    p.add_argument("--tts-format", default="wav", choices=["wav", "mp3"], help="wav 才能算 RTF")
+    p.add_argument("--sleep", type=float, default=0.3, help="seconds between requests, to stay under the per-key rate limit")
+    p.add_argument("--tts-format", default="wav", choices=["wav", "mp3"], help="RTF can only be computed for wav")
     p.add_argument("--dataset", default="hf-internal-testing/librispeech_asr_dummy")
     p.add_argument("--config", default="clean")
     p.add_argument("--split", default="validation")
     p.add_argument("--verify-ssl", action="store_true")
-    p.add_argument("--csv", default="", help="可选：把结果写到这个 CSV")
+    p.add_argument("--csv", default="", help="optional: write results to this CSV")
     args = p.parse_args()
     verify = args.verify_ssl
     if not verify:
@@ -241,7 +241,7 @@ def main():
             pass
 
     if not args.api_key:
-        print("缺 API key：--api-key 或 export ECOHASH_API_KEY=eco_xxx", file=sys.stderr); return 1
+        print("No API key. Pass --api-key, or: export ECOHASH_API_KEY=eco_...", file=sys.stderr); return 1
 
     if args.models:
         want = [m.strip() for m in args.models.split(",") if m.strip()]
@@ -250,37 +250,37 @@ def main():
         tts = [m for m in want if m in all_tts]
         unknown = [m for m in want if m not in all_stt + all_tts]
         if unknown:
-            print(f"注意：这些不是平台上的语音模型，跳过：{unknown}", file=sys.stderr)
+            print(f"Skipping, not speech models on the platform: {unknown}", file=sys.stderr)
     else:
         stt, tts = discover(args.base_url, args.api_key, verify)
 
-    print(f"目标：{args.base_url}")
-    print(f"STT 模型：{stt or '(无)'}")
-    print(f"TTS 模型：{tts or '(无)'}")
+    print(f"Target: {args.base_url}")
+    print(f"STT models: {stt or '(none)'}")
+    print(f"TTS models: {tts or '(none)'}")
 
     clips = []
     if stt:
-        print(f"加载语音数据集 {args.dataset} [{args.config}/{args.split}] …", flush=True)
+        print(f"Loading speech dataset {args.dataset} [{args.config}/{args.split}] ...", flush=True)
         try:
             clips = load_clips(args)
-            print(f"  取到 {len(clips)} 条带标注语音")
+            print(f"  got {len(clips)} labelled clips")
         except Exception as ex:
-            print(f"  数据集加载失败：{ex}\n  装一下：pip install --user datasets soundfile numpy", file=sys.stderr)
+            print(f"  dataset failed to load: {ex}\n  install with: pip install --user datasets soundfile numpy", file=sys.stderr)
             stt = []
 
     stt_rows = run_stt(args.base_url, args.api_key, stt, clips, args, verify) if stt and clips else []
     tts_rows = run_tts(args.base_url, args.api_key, tts, args, verify) if tts else []
 
     print("\n" + "=" * 78)
-    print("STT 结果（WER 越低越好；RTFx 越高越快，是 API 端到端值含网络）")
-    print(f"{'模型':24} {'OK/N':>7} {'WER%':>7} {'RTFx中位':>9} {'RTFx范围':>15} 错误")
+    print("STT results. Lower WER is better; higher RTFx is faster, measured end to end through the API, network included.")
+    print(f"{'model':24} {'OK/N':>7} {'WER%':>7} {'RTFx med':>9} {'RTFx range':>15} errors")
     for r in stt_rows:
         rng = f"{r['rtfx_min']:.1f}-{r['rtfx_max']:.1f}" if r["rtfx_min"] else "-"
         wer_s = f"{r['wer']:.2f}" if r["wer"] is not None else "n/a"
         rtfx_s = f"{r['rtfx_med']:.1f}" if r["rtfx_med"] else "n/a"
         print(f"{r['model']:24} {r['ok']}/{r['n']:<5} {wer_s:>7} {rtfx_s:>9} {rng:>15} {r['nerr']} {r['err']}")
-    print("\nTTS 结果（TTFA 越低越好；RTF<1 才能流式实时）")
-    print(f"{'模型':24} {'OK/N':>7} {'TTFA中位ms':>11} {'总耗时中位ms':>13} {'RTF中位':>9} {'流式':>10} 错误")
+    print("\nTTS results. Lower TTFA is better; RTF below 1 is required for real-time streaming.")
+    print(f"{'model':24} {'OK/N':>7} {'TTFA med ms':>12} {'total med ms':>13} {'RTF med':>9} {'stream':>10} errors")
     for r in tts_rows:
         ttfa_s = f"{r['ttfa_med']:.0f}" if r["ttfa_med"] else "n/a"
         total_s = f"{r['total_med']:.0f}" if r["total_med"] else "n/a"
@@ -297,7 +297,7 @@ def main():
                 w.writerow(["stt", r["model"], r["ok"], r["n"], r["wer"], r["rtfx_med"], "", "", "", "", r["nerr"]])
             for r in tts_rows:
                 w.writerow(["tts", r["model"], r["ok"], r["n"], "", "", r["ttfa_med"], r["total_med"], r["rtf_med"], r["streaming"], r["nerr"]])
-        print(f"已写入 {args.csv}")
+        print(f"wrote {args.csv}")
     return 0
 
 
