@@ -91,25 +91,29 @@ Full data: [speech/tts.csv](speech/tts.csv).
 
 ## Image generation
 
-Measured on one RTX PRO 6000, end-to-end, 1024×1024, 2026-07. Each model runs at its design step count.
+Measured on one RTX PRO 6000, end-to-end, 1024×1024. Each model runs at its design step count. Qwen-Image-2.1 measured 2026-09, the rest 2026-07.
 
 | Model | Params | Steps | Latency / image | Time / step | Images / min | Price / image |
 |---|---|---|---|---|---|---|
 | flux2-klein | 9B | 4 | 1.2 s | 0.29 s | 52 | $0.02 |
 | z-image-turbo | 6B | 8 | 3.2 s | 0.40 s | 20 | $0.01 |
+| qwen-image-2.1 | 7B | 40 | 10.1 s | 0.25 s | 6.3 | not offered |
 | qwen-image | 20B | 50 | 13.4 s | 0.27 s | 4.6 | $0.03 |
 
-The three models run at similar time per step (0.27 to 0.40 s); total latency scales with the steps each model needs, which is why the 4-step and 8-step models finish fastest.
+All four run at a similar time per step (0.25 to 0.40 s); total latency scales with the steps each model needs, which is why the 4-step and 8-step models finish fastest.
 
-Same prompt across the three models: "a red apple on a weathered wooden table, soft window light, photorealistic".
+Qwen-Image-2.1 replaces the 20B DiT of Qwen-Image with a 7B one and drops from 50 steps to 40, which takes a 1024x1024 image from 13.4 s to 10.1 s. It ships under the Qwen Research License, so we measured it but do not serve it; the 2.0 model stays on the platform under Apache-2.0.
+
+Same prompt across all four: "a red apple on a weathered wooden table, soft window light, photorealistic".
 
 <p align="center">
-  <img src="assets/samples/z-image-turbo-apple.png" alt="z-image-turbo" width="32%">
-  <img src="assets/samples/flux2-klein-apple.png" alt="flux2-klein" width="32%">
-  <img src="assets/samples/qwen-image-apple.png" alt="qwen-image" width="32%">
+  <img src="assets/samples/z-image-turbo-apple.png" alt="z-image-turbo" width="24%">
+  <img src="assets/samples/flux2-klein-apple.png" alt="flux2-klein" width="24%">
+  <img src="assets/samples/qwen-image-2-1-apple.png" alt="qwen-image-2.1" width="24%">
+  <img src="assets/samples/qwen-image-apple.png" alt="qwen-image" width="24%">
 </p>
 
-<p align="center"><sub>z-image-turbo (8 steps) · flux2-klein (4 steps) · qwen-image (50 steps)</sub></p>
+<p align="center"><sub>z-image-turbo (8 steps) · flux2-klein (4 steps) · qwen-image-2.1 (40 steps) · qwen-image (50 steps)</sub></p>
 
 Full data: [image/image.csv](image/image.csv).
 
