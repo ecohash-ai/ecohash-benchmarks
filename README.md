@@ -20,7 +20,7 @@ Open performance benchmarks for open models on [EcoHash](https://ecohash.com?utm
 
 ## Methodology
 
-The same open model gives different numbers depending on who serves it and how it is measured. Tables distinguish EcoHash measurements from external sources. Speech, image and the original single-GPU LLM tables use the public API path. The multi-GPU Flash results below use direct local HTTP to the engine, with the gateway and public internet excluded.
+The same open model gives different numbers depending on who serves it and how it is measured. Tables distinguish EcoHash measurements from external sources. Speech, image and the original single-GPU LLM tables use the public API path. The multi-GPU Flash results below bypass the public API and gateway through a local forwarded endpoint; they include the bastion-to-cluster forwarding overhead.
 
 - **Speech** (2026-07): STT reports WER on LibriSpeech test-clean and RTFx as peak aggregate throughput under concurrency; TTS reports TTFA (time to first audio). Audio metrics include network.
 - **Image** (2026-07): 1024×1024, each model at its design step count; latency per image, time per step, and images per minute.
