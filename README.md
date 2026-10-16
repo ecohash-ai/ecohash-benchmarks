@@ -11,7 +11,7 @@
 
 # EcoHash Benchmarks
 
-Open performance benchmarks for the open models served on [EcoHash](https://ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=devrel&utm_content=benchmarks-readme-intro), an OpenAI-compatible inference API. All EcoHash numbers are measured on a single NVIDIA RTX PRO 6000 (Blackwell, 96 GB).
+Open performance benchmarks for open models on [EcoHash](https://ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=devrel&utm_content=benchmarks-readme-intro), an OpenAI-compatible inference API and GPU cloud. Measurements use NVIDIA RTX PRO 6000 Blackwell GPUs (96 GB class); each section states the GPU count and request path.
 
 <p align="center">
   <img src="assets/stt-wer-vs-rtfx.png" alt="Speech-to-text: WER vs RTFx" width="49%">
@@ -20,7 +20,7 @@ Open performance benchmarks for the open models served on [EcoHash](https://ecoh
 
 ## Methodology
 
-The same open model gives different numbers depending on who serves it and how it is measured. Every table lists a **Source** column, and **EcoHash rows (in bold) are our own measurements** on a single RTX PRO 6000, end-to-end through `https://api.ecohash.com/v1`.
+The same open model gives different numbers depending on who serves it and how it is measured. Tables distinguish EcoHash measurements from external sources. Speech, image and the original single-GPU LLM tables use the public API path. The multi-GPU Flash results below use direct local HTTP to the engine, with the gateway and public internet excluded.
 
 - **Speech** (2026-07): STT reports WER on LibriSpeech test-clean and RTFx as peak aggregate throughput under concurrency; TTS reports TTFA (time to first audio). Audio metrics include network.
 - **Image** (2026-07): 1024×1024, each model at its design step count; latency per image, time per step, and images per minute.
@@ -182,6 +182,19 @@ Same open model, different providers, EcoHash in purple. It has the lowest time 
 <p align="center"><sub>Llama-3.1-8B peers from Artificial Analysis · Qwen3.8-27B peers from OpenRouter (2026-08); blended price = (3×input + 1×output) / 4</sub></p>
 
 Full data: [llm/llm.csv](llm/llm.csv), [llm/llama8b-providers.csv](llm/llama8b-providers.csv), [llm/qwen38-providers.csv](llm/qwen38-providers.csv).
+
+### DeepSeek V4 Flash and Qwen3.8 Flash Next
+
+Measured 2026-10-15 in ATL. Each model used one node: eight GPUs for DeepSeek and four for Qwen. The selected configurations enable DSpark or MTP speculation and a 524,288-token context window. This main test used short questions and allowed complete, variable-length answers, including reasoning tokens.
+
+| Model | GPUs | Decode speed, C=1 | TTFT p50 / p95 | E2E p50 / p95 | Requests |
+|---|---:|---:|---|---|---:|
+| DeepSeek V4 Flash Vision Exp | 8 | 161.33 tok/s | 140.00 / 206.93 ms | 2.98 / 6.17 s | 16 |
+| Qwen3.8 Flash Next FP8 | 4 | 193.36 tok/s | 98.56 / 100.09 ms | 2.15 / 5.33 s | 16 |
+
+A separate coding probe measured 220.09 and 242.36 tok/s respectively. Its ten samples per model passed Python AST syntax checks; generated code was not executed and these are not accuracy scores. The coding and general-question workloads are reported separately.
+
+[Configuration, startup, memory and 500K continuation results](llm/atl-flash-20261015.md) · [summary CSV](llm/atl-flash-20261015.csv) · [per-request records](llm/data/atl-flash-20261015/).
 
 ## Reproduce
 
